@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+
 /**
  * ControllerConfig の ViewModel
  */
@@ -26,6 +27,7 @@ public class ControllerConfigViewModel {
         this.isAnalogScratchProperty.set(config.isAnalogScratch());
         this.analogScratchThresholdProperty.set(config.getAnalogScratchThreshold());
         this.analogScratchModeProperty.set(config.getAnalogScratchMode());
+        
         
     }
     

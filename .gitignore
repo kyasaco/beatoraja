@@ -17,3 +17,5 @@ b.bat
 /*.dll
 *.cim
 .idea/
+/.gradle/
+/build/

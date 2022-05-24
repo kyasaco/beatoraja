@@ -1,41 +1,42 @@
 package bms.player.beatoraja;
 
-import java.awt.*;
-import java.io.*;
-import java.net.URI;
+import java.io.IOException;
 import java.net.URL;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
-import bms.player.beatoraja.config.Discord;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
-
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.utils.Json;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.firestore.Firestore;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.cloud.FirestoreClient;
 
 import bms.player.beatoraja.AudioConfig.DriverType;
+import bms.player.beatoraja.config.Discord;
 import bms.player.beatoraja.ir.IRConnectionManager;
 import bms.player.beatoraja.launcher.PlayConfigurationView;
 import bms.player.beatoraja.song.SQLiteSongDatabaseAccessor;
 import bms.player.beatoraja.song.SongData;
 import bms.player.beatoraja.song.SongDatabaseAccessor;
-import bms.player.beatoraja.song.SongInformationAccessor;
 import bms.player.beatoraja.song.SongUtils;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+
 
 /**
  * 起動用クラス
@@ -56,8 +57,11 @@ public class MainLoader extends Application {
 
 	public static Discord discord;
 
+		
+	
+	
+	
 	public static void main(String[] args) {
-
 		if(!ALLOWS_32BIT_JAVA && !System.getProperty( "os.arch" ).contains( "64")) {
 			JOptionPane.showMessageDialog(null, "This Application needs 64bit-Java.", "Error", JOptionPane.ERROR_MESSAGE);
 			System.exit(1);
@@ -65,8 +69,21 @@ public class MainLoader extends Application {
 
 		Logger logger = Logger.getGlobal();
 		try {
+			
+			FirebaseOptions options =  FirebaseOptions.builder()
+				    .setCredentials(GoogleCredentials.getApplicationDefault())
+				    .setProjectId("express-test-63cb2")
+				    .build();
+			
+			FirebaseApp.initializeApp(options);
+
+			Firestore db = FirestoreClient.getFirestore();
+			
+			System.out.println(db.collection("room"));
 			logger.addHandler(new FileHandler("beatoraja_log.xml"));
-		} catch (Throwable e) {
+		} catch(IOException ioe ){
+			ioe.printStackTrace();
+		}catch (Throwable e) {
 			e.printStackTrace();
 		}
 
